@@ -3,21 +3,29 @@ abstract: 'load fixture data to storage.'
 author:
   - 'Tokuhiro Matsuno <tokuhirom@gmail.com>'
 build_requires:
+  ExtUtils::MakeMaker: 6.42
   Test::More: 0
+  Test::Requires: 0
+configure_requires:
+  ExtUtils::MakeMaker: 6.42
 distribution_type: module
-generated_by: 'Module::Install version 0.720'
+generated_by: 'Module::Install version 0.91'
 license: perl
 meta-spec:
-  url: http://module-build.sourceforge.net/META-spec-v1.3.html
-  version: 1.3
+  url: http://module-build.sourceforge.net/META-spec-v1.4.html
+  version: 1.4
 name: Test-Fixture-DBIC-Schema
 no_index:
   directory:
     - inc
     - t
+    - xt
 requires:
   DBIx::Class: 0.08008
+  Filter::Util::Call: 0
   Kwalify: 1.16
   Params::Validate: 0.89
   YAML::Syck: 1
-version: 0.02
+resources:
+  license: http://dev.perl.org/licenses/
+version: 0.03

@@ -4,17 +4,16 @@ use Test::More;
 use t::Tools;
 use Test::Fixture::DBIC::Schema;
 use File::Temp qw/tempfile/;
+use Test::Requires 'DBD::SQLite';
 
-eval { require DBD::SQLite; };
-plan skip_all => "DBD::SQLite is not installed." if $@;
-
-plan tests => 15;
+plan tests => 17;
 
 schema->storage->dbh->do(
     q{
         INSERT INTO artist (artistid, name) VALUES (1, 'foo');
     }
 );
+
 is schema->resultset('Artist')->count, 1;
 
 my @fixture_sources = (
@@ -49,6 +48,7 @@ for my $fixture_src (@fixture_sources) {
 
     is schema->resultset('Artist')->count, 1;
     is schema->resultset('CD')->count, 1;
+    is schema->resultset('ViewAll')->count, 1;
     ok $fixture->{cd}, 'has key';
     ok $fixture->{artist}, 'has key';
     is $fixture->{cd}->id, 3;

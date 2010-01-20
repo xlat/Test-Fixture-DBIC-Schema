@@ -1,7 +1,7 @@
 package Test::Fixture::DBIC::Schema;
 use strict;
 use warnings;
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 use base 'Exporter';
 our @EXPORT = qw/construct_fixture/;
 use Params::Validate ':all';
@@ -63,7 +63,9 @@ sub _validate_fixture {
 sub _delete_all {
     my $schema = shift;
 
-    $schema->resultset($_)->delete for $schema->sources;
+    $schema->resultset($_)->delete for
+        grep { $schema->source_registrations->{$_}->isa('DBIx::Class::ResultSource::Table') }
+            $schema->sources;
 }
 
 sub _insert {

@@ -3,10 +3,7 @@ use strict;
 use warnings;
 use t::Foo;
 
-my $tmpfname = 't/testdb.sqlite';
-unlink $tmpfname;
-
-my $schema = t::Foo->connect("dbi:SQLite:dbname=$tmpfname", '', '');
+my $schema = t::Foo->connect("dbi:SQLite:", '', '');
 $schema->storage->dbh->do(
     q{
         CREATE TABLE cd (
@@ -23,6 +20,18 @@ $schema->storage->dbh->do(
             artistid INTEGER,
             name     VARCHAR(255)
         );
+    }
+);
+$schema->storage->dbh->do(
+    q{
+        CREATE VIEW view_all AS
+            select cd.cdid,
+                   cd.title,
+                   cd.year,
+                   a.artistid as artist_id,
+                   a.name     as artist_name
+            from cd, artist a
+            where cd.artist=a.artistid;
     }
 );
 
