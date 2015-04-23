@@ -1,5 +1,8 @@
 Revision history for Perl extension Test::Fixture::DBIC::Schema
 
+0.05 April 23 08:15:00 2015
+   - add no_delete argument so it does not delete_all entities.
+
 0.04    Thu May  2 10:04:31 2013
 
     - fix tests to be robust against hash order randomization

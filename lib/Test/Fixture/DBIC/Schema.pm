@@ -1,7 +1,7 @@
 package Test::Fixture::DBIC::Schema;
 use strict;
 use warnings;
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 use base 'Exporter';
 our @EXPORT = qw/construct_fixture/;
 use Params::Validate ':all';
@@ -13,12 +13,13 @@ sub construct_fixture {
         @_ => +{
             schema  => +{ isa => 'DBIx::Class::Schema' },
             fixture => 1,
+			no_delete => 0,
         }
     );
     my %args = @_;
 
     my $fixture = _validate_fixture(_load_fixture($args{fixture}));
-    _delete_all($args{schema});
+    _delete_all($args{schema}) unless $args{no_delete};
     return _insert($args{schema}, $fixture);
 }
 
@@ -97,6 +98,7 @@ Test::Fixture::DBIC::Schema - load fixture data to storage.
   my $data = construct_fixture(
     schema  => $self->model,
     fixture => 'fixture.yaml',
+	no_delete => 0,
   );
 
   # in your fixture.yaml
@@ -126,9 +128,11 @@ Test::Fixture::DBIC::Schema is fixture data loader for DBIx::Class::Schema.
   my $data = construct_fixture(
     schema  => $self->model,
     fixture => 'fixture.yaml',
+	no_delete => 1,
   );
 
 construct your fixture.
+You can set no_delete parameter to a true value so it does not delete preloaded entities; it can be usefull if you have other fixtures sources.
 
 =head1 CODE COVERAGE
 

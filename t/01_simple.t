@@ -6,7 +6,7 @@ use Test::Fixture::DBIC::Schema;
 use File::Temp qw/tempfile/;
 use Test::Requires 'DBD::SQLite';
 
-plan tests => 17;
+plan tests => 22;
 
 schema->storage->dbh->do(
     q{
@@ -56,3 +56,23 @@ for my $fixture_src (@fixture_sources) {
     is $fixture->{artist}->name, 'beatles';
 }
 
+NO_DELETE: {
+	schema->storage->dbh->do( $_ )
+		for
+			q{ DELETE FROM artist; },
+			q{ DELETE FROM cd; },
+			q{ INSERT INTO artist (artistid, name) VALUES (1, 'foo'); };
+
+	is schema->resultset('Artist')->count, 1;
+	is schema->resultset('CD')->count, 0;
+
+	my $fixture = construct_fixture(
+	  schema  => schema,
+	  fixture => $fixture_sources[0],
+	  no_delete => 1
+	);
+
+	is schema->resultset('Artist')->count, 2;
+	is schema->resultset('CD')->count, 1;
+	is schema->resultset('ViewAll')->count, 1;
+}
